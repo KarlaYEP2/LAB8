@@ -26,7 +26,7 @@ function getWeather() {
 
 function showWeather(index: number) {
     if(weather !== undefined && weather.length>0) {
-        return weather[index]["weather"][0]["description"];
+        return weather[index]["weather"][0]["description"]
     }
 }
 
@@ -44,5 +44,5 @@ function showWeather(index: number) {
             </div>
         )
     }
-render(<App />, document.getElementById("root"));
+render(<App />, document.getElementById("root"))
 export default App
