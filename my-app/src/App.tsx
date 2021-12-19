@@ -2,59 +2,47 @@ import React, {Component, useState} from "react"
 import { render } from "react-dom"
 let lat = 0
 let lon = 0
+    function App() {
 
-class App extends Component {
-    constructor(props: App) {
-        super(props)
-        this.state = {
-        };
-    }
-
-    componentDidMount() {
-        navigator.geolocation.getCurrentPosition(function(position) {
-            lat = position.coords.latitude
-            lon = position.coords.longitude
-        })
-    }
-    componentDidUpdate() {
-        if(!navigator.geolocation.getCurrentPosition) {
-            return alert("stop")
+let [weather, setWeather] = useState([]);
+        function getLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position: GeolocationPosition) => {
+                    lat = position.coords.latitude;
+                    lon = position.coords.longitude;
+                    console.log(lat)
+                    getWeather()
+                }, () => {
+                    alert ('In order for this website to function I need your location :)')
+                })
+            }
         }
-    }
-
-    render() {
-        return (
-            <div className="App">
-                <h4>Weather</h4>
-                <div id="map">
-                    <button onClick={getWeather}>get weather</button>
-                    <link rel="stylesheet" href="index.css"/>
-
-                </div>
-                <React.Fragment>
-
-                </React.Fragment>
-            </div>
-        )
-    }
-}
 function getWeather() {
     let url = 'https://api.openweathermap.org/data/2.5/onecall?lat='+ lat + '&lon=' + lon + '&exclude=minutely,hourly,alerts,current&appid=' + process.env.REACT_APP_API_KEY
     return fetch(url)
         .then(res => res.json())
-        .then(data => showWeather(data.daily))
+        .then(data => setWeather(data.daily))
 }
 
-function showWeather(resp: any) {
-    console.log(resp)
-    let arraydata = [];
-    for (let i in resp)
-        arraydata.push([i, resp [i]])
-    console.log(arraydata)
+function showWeather(index: number) {
+    if(weather !== undefined && weather.length>0) {
+        return weather[index]["weather"][0]["description"];
+    }
 }
 
-
-
-
+        return (
+            <div>
+                <h4>Weather</h4>
+                <div>
+                    <button onClick={getLocation}>get weather</button>
+                    <p>Day 0: {showWeather(0)}</p>
+                    <p>Day 1: {showWeather(1)}</p>
+                    <p>Day 2: {showWeather(3)}</p>
+                    <p>Day 3: {showWeather(4)}</p>
+                    <p>Day 4: {showWeather(5)}</p>
+                </div>
+            </div>
+        )
+    }
 render(<App />, document.getElementById("root"));
 export default App
